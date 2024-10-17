@@ -17,6 +17,14 @@
             background-color: #1a202c;
             color: #cbd5e0;
         }
+
+        .accordion-header {
+            cursor: pointer;
+        }
+
+        .accordion-content {
+            display: none;
+        }
     </style>
 </head>
 
@@ -49,10 +57,26 @@
             data.forEach((row, index) => {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'p-4 bg-gray-800 rounded shadow';
-                rowDiv.innerHTML = `<h2 class="text-xl font-semibold">Prompt ${index + 1}</h2>`;
+
+                const header = document.createElement('div');
+                header.className = 'accordion-header text-xl font-semibold';
+                header.innerHTML = row.act;
+                header.addEventListener('click', () => {
+                    const content = rowDiv.querySelector('.accordion-content');
+                    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+                });
+
+                const content = document.createElement('div');
+                content.className = 'accordion-content';
+                content.style.display = 'none';
                 for (const [key, value] of Object.entries(row)) {
-                    rowDiv.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+                    if (key !== 'act') {
+                        content.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+                    }
                 }
+
+                rowDiv.appendChild(header);
+                rowDiv.appendChild(content);
                 csvDataDiv.appendChild(rowDiv);
             });
         }
